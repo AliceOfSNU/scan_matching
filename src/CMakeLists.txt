@@ -1,23 +1,28 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+project(Localization)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_definitions(-std=c++11)
+cmake_minimum_required (VERSION 3.10)
 
-set(CXX_FLAGS "-Wall")
-set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
+# -g allows for gdb debugging
+# turn on -03 for best performance
+add_definitions(-std=c++14 -O3)
 
-project(playback)
+set(CXX_FLAGS "-pthread -fPIC")
+set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
+
+set(sources ndt-main.cpp helper.cpp)
 
 find_package(PCL 1.2 REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
-list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-add_executable (environment environment.cpp render/render.cpp processPointCloud.cpp)
-target_link_libraries (environment ${PCL_LIBRARIES})
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
+add_executable(ndt ${sources} )
 
-
-
+target_link_libraries(ndt ${PCL_LIBRARIES})
